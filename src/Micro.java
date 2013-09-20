@@ -6,10 +6,12 @@ public class Micro {
 
 	public static class AwesomeErrorStrategy extends DefaultErrorStrategy {
 		public void	recover(Parser p, RecognitionException e) {return;};
-		public Token recoverInLine(Parser p) {
+		public Token recoverInline(Parser recognizer)
+				throws RecognitionException
+		{
 			System.out.println("Not Accepted");
 			System.exit(0);
-			return new CommonToken(0);
+			return(new CommonToken(0));
 		}
 		public void	reportError(Parser p, RecognitionException e) {	
 			System.out.println("Not Accepted");
@@ -29,7 +31,5 @@ public class Micro {
 //			tree.inspect(parser);
 //			System.out.println(tree.toStringTree(parser));	
 			System.out.println("Accepted");
-
-
 	}
 }
