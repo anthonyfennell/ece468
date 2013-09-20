@@ -6,11 +6,20 @@ public class Micro {
 
 	public static void main(String[] args) throws Exception {
 			CharStream test = new ANTLRFileStream( args[0] );
-			Microlexer lexer = new Microlexer(test);
-			Token token;
-	
-			while(true){
+			MicrolexerLexer lexer = new MicrolexerLexer(test);
+			//Token token;
+			//ErrorHandler EH = new FailFastHandler();
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			MicrolexerParser parser = new MicrolexerParser(tokens);
+						
+			parser.setBuildParseTree(true);
+			RuleContext tree = parser.program();
+			tree.inspect(parser);
+			System.out.println(tree.toStringTree(parser));	
 
+
+
+			/*while(true){
 				token = lexer.nextToken();
 				if (token.getType() == -1){
 					break;
@@ -27,6 +36,6 @@ public class Micro {
 				} else if (token.getType() == 6){
 					System.out.printf("Token Type: OPERATOR\nValue: %s\n", token.getText());
 				}
-			}
+			}*/
 	}
 }
