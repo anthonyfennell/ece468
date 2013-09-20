@@ -4,38 +4,32 @@ import org.antlr.v4.runtime.*;
 
 public class Micro {
 
+	public static class AwesomeErrorStrategy extends DefaultErrorStrategy {
+		public void	recover(Parser p, RecognitionException e) {return;};
+		public Token recoverInLine(Parser p) {
+			System.out.println("Not Accepted");
+			System.exit(0);
+			return new CommonToken(0);
+		}
+		public void	reportError(Parser p, RecognitionException e) {	
+			System.out.println("Not Accepted");
+			System.exit(0);
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
 			CharStream test = new ANTLRFileStream( args[0] );
 			MicrolexerLexer lexer = new MicrolexerLexer(test);
-			//Token token;
-			//ErrorHandler EH = new FailFastHandler();
+			AwesomeErrorStrategy XErrorHandler = new AwesomeErrorStrategy();
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			MicrolexerParser parser = new MicrolexerParser(tokens);
-						
+			parser.setErrorHandler(XErrorHandler);					
 			parser.setBuildParseTree(true);
 			RuleContext tree = parser.program();
-			tree.inspect(parser);
-			System.out.println(tree.toStringTree(parser));	
+//			tree.inspect(parser);
+//			System.out.println(tree.toStringTree(parser));	
+			System.out.println("Accepted");
 
 
-
-			/*while(true){
-				token = lexer.nextToken();
-				if (token.getType() == -1){
-					break;
-				} else if (token.getType() == 1){
-					System.out.printf("Token Type: KEYWORD\nValue: %s\n", token.getText());
-				} else if (token.getType() == 2){
-					System.out.printf("Token Type: IDENTIFIER\nValue: %s\n", token.getText());
-				} else if (token.getType() == 3){
-					System.out.printf("Token Type: FLOATLITERAL\nValue: %s\n", token.getText());
-				} else if (token.getType() == 4){
-					System.out.printf("Token Type: INTLITERAL\nValue: %s\n", token.getText());
-				} else if (token.getType() == 5){
-					System.out.printf("Token Type: STRINGLITERAL\nValue: %s\n", token.getText());
-				} else if (token.getType() == 6){
-					System.out.printf("Token Type: OPERATOR\nValue: %s\n", token.getText());
-				}
-			}*/
 	}
 }
