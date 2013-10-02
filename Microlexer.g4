@@ -3,23 +3,23 @@ grammar Microlexer;
 /* Program */
 program           : 'PROGRAM' id 'BEGIN' pgm_body? 'END' ;
 id                : IDENTIFIER ;
-pgm_body          : decl? func_declarations ;
-decl		  				: string_decl decl? | var_decl decl? ;
+pgm_body          : decl? #global_decl func_declarations ;
+decl		  			: string_decl decl? | var_decl decl? ;
 
 
 /* Global String Declaration */
-string_decl       	: 'STRING' id ':=' str ';' ;
+string_decl       	: 'STRING' id ':=' str ';' #decl_string ;
 str               	: STRINGLITERAL ;
 
 /* Variable Declaration */
-var_decl          : var_type id_list ';';
+var_decl          : var_type id_list ';' #decl_var ;
 var_type	        : 'FLOAT' | 'INT' ;
 any_type          : var_type | 'VOID' ;
 id_list           : id id_tail? ;
 id_tail           : ',' id id_tail? ;
 
 /* Function Paramater List */
-param_decl_list   : param_decl param_decl_tail ;
+param_decl_list   : param_decl param_decl_tail #func_param_decl ;
 param_decl        : var_type id ;
 param_decl_tail   : ',' param_decl param_decl_tail | /* empty */ ;
 
@@ -27,7 +27,7 @@ param_decl_tail   : ',' param_decl param_decl_tail | /* empty */ ;
 func_declarations : func_decl func_decl_tail? ;
 func_decl         : 'FUNCTION' any_type id '(' param_decl_list? ')' 'BEGIN' func_body? 'END' ;
 func_decl_tail    : func_decl func_decl_tail? ;
-func_body         : decl? stmt_list ;
+func_body         : decl? #func_body_decl stmt_list ;
 
 /* Statement List */
 stmt_list         : stmt stmt_list? ;
@@ -55,13 +55,13 @@ addop             : '+' | '-' ;
 mulop             : '*' | '/' ;
 
 /* Complex Statements and Condition */ 
-if_stmt           : 'IF' '(' cond ')' decl? stmt_list? else_part 'ENDIF' ;
-else_part         : 'ELSIF' '(' cond ')' decl? stmt_list? else_part | /* empty */ ;
+if_stmt           : 'IF' '(' cond ')' decl? #then_decl stmt_list? else_part 'ENDIF' ;
+else_part         : 'ELSIF' '(' cond ')' decl? #else_decl stmt_list? else_part | /* empty */ ;
 cond              : expr compop expr | 'TRUE' | 'FALSE' ;
 compop            : '<' | '>' | '=' | '!=' | '<=' | '>=' ;
 
 /* ECE 468 students use this version of do_while_stmt */
-do_while_stmt       : 'DO' decl? stmt_list? 'WHILE' '(' cond ')' ';' ;
+do_while_stmt       : 'DO' decl? #repeat_decl stmt_list? 'WHILE' '(' cond ')' ';' ;
 
 KEYWORD 			: ('PROGRAM'|'BEGIN'|'END'|'FUNCTION'|'READ'|'WRITE'|'IF'|
 								'ELSIF'|'ENDIF'|'DO'|'WHILE'|'CONTINUE'|'BREAK'|'RETURN'|

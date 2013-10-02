@@ -28,8 +28,8 @@ public class Micro {
 			parser.setErrorHandler(XErrorHandler);					
 			parser.setBuildParseTree(true);
 			RuleContext tree = parser.program();
-//			tree.inspect(parser);
-//			System.out.println(tree.toStringTree(parser));	
+			//tree.inspect(parser);
+			//System.out.println(tree.toStringTree(parser));	
 			System.out.println("Accepted");
 	}
 }
